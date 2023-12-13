@@ -11,10 +11,11 @@ def main():
             s.connect((host,port))
             print(f"Port {port} is open.")
             try:
-                serviceName = socket.getservbyport(port);
+                serviceName = socket.getservbyport(port, "tcp")
+                print(f"TCP service: {serviceName}")
+                serviceName = socket.getservbyport(port, "udp")
                 print(serviceName)
-                #serviceName = socket.getservbyport(port, "udp");
-                #print(serviceName)
+                print(f"UDP service: {serviceName}")
             except Exception as error:
                 print(f"service port:{error}")
 
