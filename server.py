@@ -37,10 +37,11 @@ def main():
     server_socket.bind((host, port))
     server_socket.listen(1)
     print(f"Server is listening on http://{host}:{port}")
+    
+    client_socket, client_address = server_socket.accept()
+    should_exit = False
 
-
-    while True:
-        client_socket, client_address = server_socket.accept()
+    while not should_exit:
         request = client_socket.recv(1024).decode()
 
         print("RECEIVED REQUEST: ", request, sep=" ")
@@ -49,11 +50,15 @@ def main():
             response = handle_get_request(request)
         elif "POST" in request:
             response = handle_post_request(request)
+        elif "EXIT" in request:
+            should_exit = True
+            response = "Bye!"
         else:
             response = "HTTP/1.1 400 Bad Request\n\nInvalid request"
 
         client_socket.sendall(response.encode())
-        client_socket.close()
+
+    client_socket.close()
 
 if __name__ == '__main__':
     main()
